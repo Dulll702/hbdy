@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Selamat Ulang Tahun Titi🎉</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ======== STYLE DASAR ======== */
+    body {
+      margin: 0;
+      font-family: 'Momo Trust Display', sans-serif; /* Ganti font di sini */
+      overflow-x: hidden;
+      background: url('background.mp4') no-repeat center center fixed; /* Ganti dengan animasimu */
+      background-size: contain; /* Ubah ukuran background di sini */
+    }
+ #bgVideo {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+    section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      min-height: 100vh;
+      text-align: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .container {
+      opacity: 0;
+      transform: translateY(50px);
+      transition: all 1s ease;
+    }
+
+    .container.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    img {
+      width: 250px;
+      height: 370px;
+      object-fit: cover;
+      border-radius: 20px;
+      box-shadow: 0 0 25px rgba(0,0,0,0.4);
+      cursor: pointer;
+      transition: transform 0.5s;
+    }
+
+    img:hover {
+      transform: scale(1.1) rotate(2deg);
+    }
+
+    .text {
+      color: white ;
+      font-size: 1.3em; /* Ubah ukuran huruf di sini */
+      margin-top: 15px;
+      max-width: 300px;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+    }
+
+    /* Efek getar kejutan */
+    .surprise {
+      animation: shake 0.4s ease-in-out infinite alternate;
+    }
+
+    @keyframes shake {
+      from { transform: rotate(-5deg); }
+      to { transform: rotate(5deg); }
+    }
+
+    /* Kanvas untuk kembang api */
+    #fireworksCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 999;
+    }
+  </style>
+</head>
+<body>
+
+ <video autoplay muted loop id="bgVideo">
+    <source src="background.mp4" type="video/mp4">
+  </video>
+  <canvas id="fireworksCanvas"></canvas>
+
+  <!-- Musik -->
+  <audio id="music" src="musik.mp3"></audio>
+
+  <!-- FOTO 1 (dengan efek kejutan dan musik) -->
+ <section><div class="text"> scroll terus sentuh foto</div></section>
+  <section>
+    <div class="container" id="photo1">
+      <img src="foto1.webp" alt="Foto 1" id="firstPhoto">
+      <div class="text" id="firstText" style="display:none;">selamat makan dan selamat hbd buat titi, semoga panjang umur sehat selalu, rezekinya lancar biar aku bisa kasbon sama titi, semoga apa yang di semogakan tersemogakan amin yarobal alamin. </div>
+    </div>
+  </section>
+
+  <!-- FOTO 2 - 4 -->
+  <section><div class="container"><img src="foto2.webp"><div class="text">💖</div></div></section>
+  
+  <section><div class="container"><img src="foto3.webp"><div class="text">si lucu</div></div></section>
+  
+  <section><div class="container"><img src="foto4.webp"><div class="text">Setiap kali aku melihatmu, rasanya ingin sekali mengajakmu berlayar lebih jauh lagi, tetapi aku sadar kapalku terlalu usang untuk membawamu berlayar lebih jauh lagi😅</div></div></section>
+
+  <section><div class="text">Dan dihari terakhir kita bertemu, mataku sibuk merekam wajahmu, telingaku sibuk mendengar suaramu, dan hidungku sibuk menghirup aroma wangmu. Agar disaat kita tidak bertemu lagi, setidaknya di dalam memori ku masih tersimpan bagaimana cantiknya wajahmu, merdunya suaramu, dan wanginya aromamu.</div></section>
+  
+  <section><div class="text">ah udah malu gabisa puitis soalnya</div></section>
+  
+  <section><div class="text">maap kalo kadonya kurang sempurna, karna kesempurnaan hanya milik Allah SWT</div></section>
+  
+  <section><div class="container"><img src="fotot.jpg"><div class="text">hidup kesepian tanpa kekasih cukup sekian dan terimakasih</div></div></section>
+  <script>
+    // ===== Musik & Efek Kejutan =====
+    const firstPhoto = document.getElementById("firstPhoto");
+    const firstText = document.getElementById("firstText");
+    const music = document.getElementById("music");
+
+    firstPhoto.addEventListener("click", () => {
+      firstPhoto.classList.toggle("surprise");
+      firstText.style.display = "block";
+      music.play();
+      startFireworks();
+      setTimeout(stopFireworks, 5000); // kembang api 5 detik
+    });
+
+    // ===== Animasi Scroll =====
+    const containers = document.querySelectorAll(".container");
+    window.addEventListener("scroll", () => {
+      containers.forEach(c => {
+        const rect = c.getBoundingClientRect();
+        if (rect.top < window.innerHeight - 100) {
+          c.classList.add("show");
+        }
+      });
+    });
+
+    // ===== Efek Kembang Api =====
+    const canvas = document.getElementById("fireworksCanvas");
+    const ctx = canvas.getContext("2d");
+    let fireworks = [];
+    let running = false;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    class Firework {
+      constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.radius = Math.random() * 2 + 1;
+        this.vx = (Math.random() - 0.5) * 5;
+        this.vy = (Math.random() - 0.5) * 5;
+        this.alpha = 1;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.alpha -= 0.02;
+      }
+      draw() {
+        ctx.globalAlpha = this.alpha;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+      }
+    }
+
+    function randomColor() {
+      const colors = ['#ff0000', '#ff7700', '#ffff00', '#00ff00', '#00ffff', '#0000ff', '#ff00ff'];
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    function createFirework() {
+      const x = Math.random() * canvas.width;
+      const y = Math.random() * canvas.height / 2;
+      for (let i = 0; i < 30; i++) {
+        fireworks.push(new Firework(x, y, randomColor()));
+      }
+    }
+
+    function animate() {
+      if (!running) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      fireworks.forEach((f, i) => {
+        f.update();
+        f.draw();
+        if (f.alpha <= 0) fireworks.splice(i, 1);
+      });
+      requestAnimationFrame(animate);
+    }
+
+    function startFireworks() {
+      running = true;
+      fireworks = [];
+      animate();
+      const interval = setInterval(createFirework, 300);
+      setTimeout(() => clearInterval(interval), 4500);
+    }
+
+    function stopFireworks() {
+      running = false;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  </script>
+</body>
+</html>
